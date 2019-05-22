@@ -20,13 +20,26 @@ namespace BadCodeTestApp
 
         public void Start()
         {
-            while (true)
+            bool flag = true;
+            while (flag)
             {
                 System.Console.WriteLine("Enter 'exit' to exit");
                 System.Console.WriteLine("Enter 'help' to see all commands");
                 string command = RichInput("Enter the command : ");
                 this.Manager.SetCommand(Builder.GetCommand(this.Path, command));
-                this.Manager.ExecuteCommand();
+                try
+                {
+                    this.Manager.ExecuteCommand();
+                }
+                catch (InterruptException e)
+                {
+                    TextLogger.GetLogger().Log(e.Message, this.Path);
+                    flag = false;
+                }
+                catch (Exception e)
+                {
+                    TextLogger.GetLogger().Log(e.Message, this.Path);
+                }
             }
         }
     }

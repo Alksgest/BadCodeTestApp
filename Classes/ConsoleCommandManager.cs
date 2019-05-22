@@ -6,14 +6,8 @@ namespace BadCodeTestApp
     public class ConsoleCommandManager : ICommandManager
     {
         ICommand Command;
-        public ConsoleCommandManager() { }
-        public void SetCommand(ICommand command)
-        {
-            this.Command = command;
-        }
-        public void ExecuteCommand()
-        {
-            this.Command?.Execute();
-        }
+        public ConsoleCommandManager() {}
+        public void SetCommand(ICommand command) => this.Command = command;
+        public void ExecuteCommand() => this.Command?.Execute();
     }
 }

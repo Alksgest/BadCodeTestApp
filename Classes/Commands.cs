@@ -11,10 +11,10 @@ namespace BadCodeTestApp
         protected static List<string> Commands = new List<string> {
             "help",
             "exit",
-            "search", 
+            "search",
             "cs_search",
             "create_txt",
-            "remove_txt",      
+            "remove_txt",
         };
         public string Path { get; }
         public Command(string path)
@@ -29,6 +29,7 @@ namespace BadCodeTestApp
         public SearchCommand(string path) : base(path) { }
         public override void Execute()
         {
+            TextLogger.GetLogger().Log($"Method {this.GetType().ToString()}.Execute has been executed", this.Path);
             Directory.GetFiles(Path, "*", SearchOption.AllDirectories).ToList().ForEach(n => Console.WriteLine(n));
         }
     }
@@ -38,12 +39,13 @@ namespace BadCodeTestApp
         public SearchCsCommand(string path) : base(path) { }
         public override void Execute()
         {
+            TextLogger.GetLogger().Log($"Method {this.GetType().ToString()}.Execute has been executed", this.Path);
             List<string> strs = Directory.GetFiles(Path, "*", SearchOption.AllDirectories).ToList();
             foreach (string str in strs)
             {
                 if (str.Substring(str.LastIndexOf(".") + 1) == "cs")
                 {
-                    ConsoleLogger.Logger.Log(str, null, null);
+                    ConsoleLogger.GetLogger().Log(str, null);
                 }
             }
         }
@@ -62,6 +64,7 @@ namespace BadCodeTestApp
         public DeleteTxtCommand(string path) : base(path) { }
         public override void Execute()
         {
+            TextLogger.GetLogger().Log($"Method {this.GetType().ToString()}.Execute has been executed", this.Path);
             string fullPath = this.Path + "\\test.txt";
             if (File.Exists(fullPath))
             {
@@ -77,7 +80,8 @@ namespace BadCodeTestApp
         public ExitCommand(string path) : base(path) { }
         public override void Execute()
         {
-            throw new Exception("Program has been interrupted");
+            TextLogger.GetLogger().Log($"Method {this.GetType().ToString()}.Execute has been executed", this.Path);
+            throw new InterruptException();
         }
     }
 
@@ -86,8 +90,12 @@ namespace BadCodeTestApp
         public HelpCommand(string path) : base(path) { }
         public override void Execute()
         {
-            foreach(var command in Command.Commands)
-            ConsoleLogger.Logger.Log(command, null, null);
+            TextLogger.GetLogger().Log($"Method {this.GetType().ToString()}.Execute has been executed", this.Path);
+            foreach (var command in Command.Commands)
+            {
+                System.Console.Write(command + ", ");
+            }
+            System.Console.WriteLine();
         }
     }
 
@@ -98,7 +106,13 @@ namespace BadCodeTestApp
 
         public static CommandBuilder GetCommandBuilder()
         {
-            return Builder == null ? new CommandBuilder() : Builder;
+            if (Builder == null)
+            {
+                Builder = new CommandBuilder();
+                return Builder;
+            }
+            else
+                return Builder;
         }
         public ICommand GetCommand(string path, string command)
         {
