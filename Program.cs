@@ -13,32 +13,18 @@ namespace BadCodeTestApp
 
         static void Main(string[] args)
         {
-            string command = args[0];
-            string param = args[1];
+            // string param = args[0];
+            // string command = args[1];
 
-            if (command == "search")
-            {
-               Directory.GetFiles(param, "*", SearchOption.AllDirectories).ToList().ForEach(n => Console.WriteLine(n));
-            }
-            if (command == "cs_search")
-            {
-                List<string> res = Directory.GetFiles(param, "*", SearchOption.AllDirectories).ToList();
-                foreach (string str in res)
-                {
-                    if (str.Substring(str.LastIndexOf(".") + 1) == "cs")
-                    {
-                        Console.WriteLine(str);
-                    }
-                }          
-            }
-            if (command == "create_txt")
-            {
-                File.Create(param + "\\test.txt");
-            }
-            if (command == "remove_txt")
-            {
-                File.Delete(param + "\\test.txt");
-            }
+            string path = @"D:\Own Scripts\с#\isd\BadCodeTestApp";
+            string command = "search";
+
+            CommandBuilder builder = CommandBuilder.GetCommandBuilder();
+
+            ConsoleCommandManager manager = new ConsoleCommandManager();
+
+            manager.SetCommand(builder.GetCommand(path, command));
+            manager.ExecuteCommand();
 
             Console.ReadLine();
         }

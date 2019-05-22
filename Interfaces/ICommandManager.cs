@@ -5,6 +5,7 @@ namespace BadCodeTestApp
 {
     public interface ICommandManager
     {
-        int ExecuteCommand(IEnumerable<string> commands); 
+        void ExecuteCommand(); 
+        void SetCommand(ICommand command);
     }
 }
