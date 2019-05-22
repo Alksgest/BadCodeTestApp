@@ -69,6 +69,16 @@ namespace BadCodeTestApp
         }
     }
 
+    public class ExitCommand : ICommand
+    {
+        public string Path { get; }
+
+        public void Execute()
+        {
+            throw new Exception("Program has been interrupted");
+        }
+    }
+
     public class CommandBuilder
     {
         private CommandBuilder() { }
@@ -82,6 +92,10 @@ namespace BadCodeTestApp
         {
             switch (command)
             {
+                case "help":
+                    return new SearchCommand(path);
+                case "exit":
+                    return new SearchCommand(path);
                 case "search":
                     return new SearchCommand(path);
                 case "cs_search":
@@ -90,6 +104,7 @@ namespace BadCodeTestApp
                     return new SearchCommand(path);
                 case "remove_txt":
                     return new SearchCommand(path);
+
             }
             return null;
         }

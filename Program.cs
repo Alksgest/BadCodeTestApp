@@ -13,18 +13,12 @@ namespace BadCodeTestApp
 
         static void Main(string[] args)
         {
-            // string param = args[0];
-            // string command = args[1];
+            string path = args[0];
+            //string command = args[1];
 
-            string path = @"D:\Own Scripts\с#\isd\BadCodeTestApp";
-            string command = "search";
+            MainWorker worker = new MainWorker(path);
 
-            CommandBuilder builder = CommandBuilder.GetCommandBuilder();
-
-            ConsoleCommandManager manager = new ConsoleCommandManager();
-
-            manager.SetCommand(builder.GetCommand(path, command));
-            manager.ExecuteCommand();
+            worker.Start();
 
             Console.ReadLine();
         }
