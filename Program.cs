@@ -15,12 +15,9 @@ namespace BadCodeTestApp
         {
             string path = args[0];
             //string command = args[1];
-
-            MainWorker worker = new MainWorker(path);
+            MainWorker worker = new MainWorker(new ConsoleCommandManager(), path);
 
             worker.Start();
-
-            Console.ReadLine();
         }
     }
 }

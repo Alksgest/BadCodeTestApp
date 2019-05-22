@@ -8,14 +8,6 @@ namespace BadCodeTestApp
 
     public abstract class Command : ICommand
     {
-        protected static List<string> Commands = new List<string> {
-            "help",
-            "exit",
-            "search",
-            "cs_search",
-            "create_txt",
-            "remove_txt",
-        }; // only needed for help command
         public string Path { get; }
         public Command(string path)
         {
@@ -31,6 +23,7 @@ namespace BadCodeTestApp
         {
             TextLogger.GetLogger().Log($"Method {this.GetType().ToString()}.Execute() has been invoked", this.Path);
             Directory.GetFiles(Path, "*", SearchOption.AllDirectories).ToList().ForEach(n => Console.WriteLine(n));
+            System.Console.WriteLine("\n"); 
         }
     }
 
@@ -45,9 +38,10 @@ namespace BadCodeTestApp
             {
                 if (str.Substring(str.LastIndexOf(".") + 1) == "cs")
                 {
-                    ConsoleLogger.GetLogger().Log(str, null);
+                    System.Console.WriteLine(str);
                 }
             }
+            System.Console.WriteLine("\n");
         }
     }
     public class CreateTxtCommand : Command
@@ -55,7 +49,7 @@ namespace BadCodeTestApp
         public CreateTxtCommand(string path) : base(path) { }
         public override void Execute()
         {
-            File.Create(this.Path + "\\test.txt");
+            File.Create(this.Path + "\\test.txt").Dispose();
         }
     }
 
@@ -87,15 +81,25 @@ namespace BadCodeTestApp
 
     public class HelpCommand : Command
     {
+
+         private readonly List<string> Commands = new List<string> {
+            "help",
+            "exit",
+            "search",
+            "cs_search",
+            "create_txt",
+            "remove_txt",
+        }; 
         public HelpCommand(string path) : base(path) { }
         public override void Execute()
         {
             TextLogger.GetLogger().Log($"Method {this.GetType().ToString()}.Execute() has been invoked", this.Path);
-            foreach (var command in Command.Commands)
+            System.Console.Write("Commands : ");
+            foreach (var command in this.Commands)
             {
                 System.Console.Write(command + ", ");
             }
-            System.Console.WriteLine();
+            System.Console.WriteLine("\n");
         }
     }
 
@@ -128,7 +132,7 @@ namespace BadCodeTestApp
         }
         public ICommand GetCommand(string path, string command)
         {
-            switch (command)
+            switch (command.ToLower())
             {
                 case "help":
                     return new HelpCommand(path);
@@ -139,9 +143,9 @@ namespace BadCodeTestApp
                 case "cs_search":
                     return new SearchCsCommand(path);
                 case "create_txt":
-                    return new SearchCommand(path);
+                    return new CreateTxtCommand(path);
                 case "remove_txt":
-                    return new SearchCommand(path);
+                    return new DeleteTxtCommand(path);
                 default:
                     return new DefaultCommand(path);
             }

@@ -7,9 +7,9 @@ namespace BadCodeTestApp
         public ICommandManager Manager { get; }
         public string Path { get; }
         private CommandBuilder Builder = CommandBuilder.GetCommandBuilder();
-        public MainWorker(String path)
+        public MainWorker(ICommandManager manager, String path)
         {
-            this.Manager = new ConsoleCommandManager();
+            this.Manager = manager;
             this.Path = path;
         }
         private string RichInput(string message)
