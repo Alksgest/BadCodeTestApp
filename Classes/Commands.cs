@@ -5,27 +5,38 @@ using System.Linq;
 
 namespace BadCodeTestApp
 {
-    public class SearchCommand : ICommand
+
+    public abstract class Command : ICommand
     {
+        protected static List<string> Commands = new List<string> {
+            "help",
+            "exit",
+            "search", 
+            "cs_search",
+            "create_txt",
+            "remove_txt",      
+        };
         public string Path { get; }
-        public SearchCommand(string path)
+        public Command(string path)
         {
             this.Path = path;
         }
-        public void Execute()
+
+        public abstract void Execute();
+    }
+    public class SearchCommand : Command
+    {
+        public SearchCommand(string path) : base(path) { }
+        public override void Execute()
         {
             Directory.GetFiles(Path, "*", SearchOption.AllDirectories).ToList().ForEach(n => Console.WriteLine(n));
         }
     }
 
-    public class SearchCsCommand : ICommand
+    public class SearchCsCommand : Command
     {
-        public string Path { get; }
-        public SearchCsCommand(string path)
-        {
-            this.Path = path;
-        }
-        public void Execute()
+        public SearchCsCommand(string path) : base(path) { }
+        public override void Execute()
         {
             List<string> strs = Directory.GetFiles(Path, "*", SearchOption.AllDirectories).ToList();
             foreach (string str in strs)
@@ -37,27 +48,19 @@ namespace BadCodeTestApp
             }
         }
     }
-    public class CreateTxtCommand : ICommand
+    public class CreateTxtCommand : Command
     {
-        public string Path { get; }
-        public CreateTxtCommand(string path)
-        {
-            this.Path = path;
-        }
-        public void Execute()
+        public CreateTxtCommand(string path) : base(path) { }
+        public override void Execute()
         {
             File.Create(this.Path + "\\test.txt");
         }
     }
 
-    public class DeleteTxtCommand : ICommand
+    public class DeleteTxtCommand : Command
     {
-        public string Path { get; }
-        public DeleteTxtCommand(string path)
-        {
-            this.Path = path;
-        }
-        public void Execute()
+        public DeleteTxtCommand(string path) : base(path) { }
+        public override void Execute()
         {
             string fullPath = this.Path + "\\test.txt";
             if (File.Exists(fullPath))
@@ -69,13 +72,22 @@ namespace BadCodeTestApp
         }
     }
 
-    public class ExitCommand : ICommand
+    public class ExitCommand : Command
     {
-        public string Path { get; }
-
-        public void Execute()
+        public ExitCommand(string path) : base(path) { }
+        public override void Execute()
         {
             throw new Exception("Program has been interrupted");
+        }
+    }
+
+    public class HelpCommand : Command
+    {
+        public HelpCommand(string path) : base(path) { }
+        public override void Execute()
+        {
+            foreach(var command in Command.Commands)
+            ConsoleLogger.Logger.Log(command, null, null);
         }
     }
 
@@ -93,9 +105,9 @@ namespace BadCodeTestApp
             switch (command)
             {
                 case "help":
-                    return new SearchCommand(path);
+                    return new HelpCommand(path);
                 case "exit":
-                    return new SearchCommand(path);
+                    return new ExitCommand(path);
                 case "search":
                     return new SearchCommand(path);
                 case "cs_search":
@@ -104,7 +116,6 @@ namespace BadCodeTestApp
                     return new SearchCommand(path);
                 case "remove_txt":
                     return new SearchCommand(path);
-
             }
             return null;
         }
