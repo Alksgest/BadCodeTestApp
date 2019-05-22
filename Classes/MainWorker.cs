@@ -4,7 +4,7 @@ namespace BadCodeTestApp
 {
     class MainWorker
     {
-        public ConsoleCommandManager Manager { get; }
+        public ICommandManager Manager { get; }
         public string Path { get; }
         private CommandBuilder Builder = CommandBuilder.GetCommandBuilder();
         public MainWorker(String path)

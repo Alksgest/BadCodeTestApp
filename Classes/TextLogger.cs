@@ -33,7 +33,7 @@ namespace BadCodeTestApp
                 string fullPath = $"{path}//{LoggerDir}//{fileName}";
                 using (StreamWriter sw = new StreamWriter(fullPath, true, System.Text.Encoding.Default))
                 {
-                    sw.WriteLine(message);
+                    sw.WriteLine($"{message}  {DateTime.Now.TimeOfDay.ToString()}");
                 }
             }
             else
