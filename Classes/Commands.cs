@@ -15,7 +15,7 @@ namespace BadCodeTestApp
             "cs_search",
             "create_txt",
             "remove_txt",
-        };
+        }; // only needed for help command
         public string Path { get; }
         public Command(string path)
         {
@@ -29,7 +29,7 @@ namespace BadCodeTestApp
         public SearchCommand(string path) : base(path) { }
         public override void Execute()
         {
-            TextLogger.GetLogger().Log($"Method {this.GetType().ToString()}.Execute has been executed", this.Path);
+            TextLogger.GetLogger().Log($"Method {this.GetType().ToString()}.Execute() has been invoked", this.Path);
             Directory.GetFiles(Path, "*", SearchOption.AllDirectories).ToList().ForEach(n => Console.WriteLine(n));
         }
     }
@@ -39,7 +39,7 @@ namespace BadCodeTestApp
         public SearchCsCommand(string path) : base(path) { }
         public override void Execute()
         {
-            TextLogger.GetLogger().Log($"Method {this.GetType().ToString()}.Execute has been executed", this.Path);
+            TextLogger.GetLogger().Log($"Method {this.GetType().ToString()}.Execute() has been invoked", this.Path);
             List<string> strs = Directory.GetFiles(Path, "*", SearchOption.AllDirectories).ToList();
             foreach (string str in strs)
             {
@@ -64,7 +64,7 @@ namespace BadCodeTestApp
         public DeleteTxtCommand(string path) : base(path) { }
         public override void Execute()
         {
-            TextLogger.GetLogger().Log($"Method {this.GetType().ToString()}.Execute has been executed", this.Path);
+            TextLogger.GetLogger().Log($"Method {this.GetType().ToString()}.Execute() has been invoked", this.Path);
             string fullPath = this.Path + "\\test.txt";
             if (File.Exists(fullPath))
             {
@@ -80,7 +80,7 @@ namespace BadCodeTestApp
         public ExitCommand(string path) : base(path) { }
         public override void Execute()
         {
-            TextLogger.GetLogger().Log($"Method {this.GetType().ToString()}.Execute has been executed", this.Path);
+            TextLogger.GetLogger().Log($"Method {this.GetType().ToString()}.Execute() has been invoked", this.Path);
             throw new InterruptException();
         }
     }
@@ -90,12 +90,24 @@ namespace BadCodeTestApp
         public HelpCommand(string path) : base(path) { }
         public override void Execute()
         {
-            TextLogger.GetLogger().Log($"Method {this.GetType().ToString()}.Execute has been executed", this.Path);
+            TextLogger.GetLogger().Log($"Method {this.GetType().ToString()}.Execute() has been invoked", this.Path);
             foreach (var command in Command.Commands)
             {
                 System.Console.Write(command + ", ");
             }
             System.Console.WriteLine();
+        }
+    }
+
+    public class DefaultCommand : Command
+    {
+        public DefaultCommand(string path) : base(path) { }
+        public override void Execute()
+        {
+            TextLogger.GetLogger().Log($"Method {this.GetType().ToString()}.Execute() has been invoked", this.Path);
+            Console.ForegroundColor = ConsoleColor.Red;
+            ConsoleLogger.GetLogger().Log("Invalid command", null);
+            Console.ResetColor();
         }
     }
 
@@ -130,8 +142,9 @@ namespace BadCodeTestApp
                     return new SearchCommand(path);
                 case "remove_txt":
                     return new SearchCommand(path);
+                default:
+                    return new DefaultCommand(path);
             }
-            return null;
         }
     }
 }

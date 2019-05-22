@@ -9,16 +9,7 @@ namespace BadCodeTestApp
         private ConsoleLogger() { }
         static private ILogger Logger;
 
-        public static ILogger GetLogger()
-        {
-            if (Logger == null)
-            {
-                Logger = new ConsoleLogger();
-                return Logger;
-            }
-            else
-                return Logger;
-        }
+        public static ILogger GetLogger() => Logger ?? (Logger = new ConsoleLogger());
 
         public void Log(string message = "", string path = null) => System.Console.WriteLine(message);
     }

@@ -21,6 +21,7 @@ namespace BadCodeTestApp
         public void Start()
         {
             bool flag = true;
+            System.Console.Clear();
             while (flag)
             {
                 System.Console.WriteLine("Enter 'exit' to exit");

@@ -11,16 +11,7 @@ namespace BadCodeTestApp
 
         static private ILogger Logger;
 
-        public static ILogger GetLogger()
-        {
-            if (Logger == null)
-            {
-                Logger = new TextLogger();
-                return Logger;
-            }
-            else
-                return Logger;
-        }
+        public static ILogger GetLogger() => Logger ?? (Logger = new TextLogger());
 
         public void Log(string message = "", string path = null)
         {
