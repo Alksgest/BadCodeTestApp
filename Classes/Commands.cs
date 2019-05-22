@@ -81,7 +81,6 @@ namespace BadCodeTestApp
 
     public class HelpCommand : Command
     {
-
          private readonly List<string> Commands = new List<string> {
             "help",
             "exit",
