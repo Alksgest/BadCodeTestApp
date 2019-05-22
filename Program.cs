@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+
 namespace BadCodeTestApp
 {
     class Program
@@ -22,11 +23,11 @@ namespace BadCodeTestApp
             if (command == "cs_search")
             {
                 List<string> res = Directory.GetFiles(param, "*", SearchOption.AllDirectories).ToList();
-                foreach (string n in res)
+                foreach (string str in res)
                 {
-                    if (n.Substring(n.LastIndexOf(".") + 1) == "cs")
+                    if (str.Substring(str.LastIndexOf(".") + 1) == "cs")
                     {
-                        Console.WriteLine(n);
+                        Console.WriteLine(str);
                     }
                 }          
             }
