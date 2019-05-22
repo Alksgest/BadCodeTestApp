@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
+
 namespace BadCodeTestApp
 {
-
     public abstract class Command : ICommand
     {
         public string Path { get; }
@@ -23,7 +23,7 @@ namespace BadCodeTestApp
         {
             TextLogger.GetLogger().Log($"Method {this.GetType().ToString()}.Execute() has been invoked", this.Path);
             Directory.GetFiles(Path, "*", SearchOption.AllDirectories).ToList().ForEach(n => Console.WriteLine(n));
-            System.Console.WriteLine("\n"); 
+            System.Console.WriteLine("\n");
         }
     }
 
@@ -81,14 +81,14 @@ namespace BadCodeTestApp
 
     public class HelpCommand : Command
     {
-         private readonly List<string> Commands = new List<string> {
+        private readonly List<string> Commands = new List<string> {
             "help",
             "exit",
             "search",
             "cs_search",
             "create_txt",
             "remove_txt",
-        }; 
+        };
         public HelpCommand(string path) : base(path) { }
         public override void Execute()
         {
@@ -113,41 +113,5 @@ namespace BadCodeTestApp
             Console.ResetColor();
         }
     }
-
-    public class CommandBuilder
-    {
-        private CommandBuilder() { }
-        private static CommandBuilder Builder;
-
-        public static CommandBuilder GetCommandBuilder()
-        {
-            if (Builder == null)
-            {
-                Builder = new CommandBuilder();
-                return Builder;
-            }
-            else
-                return Builder;
-        }
-        public ICommand GetCommand(string path, string command)
-        {
-            switch (command.ToLower())
-            {
-                case "help":
-                    return new HelpCommand(path);
-                case "exit":
-                    return new ExitCommand(path);
-                case "search":
-                    return new SearchCommand(path);
-                case "cs_search":
-                    return new SearchCsCommand(path);
-                case "create_txt":
-                    return new CreateTxtCommand(path);
-                case "remove_txt":
-                    return new DeleteTxtCommand(path);
-                default:
-                    return new DefaultCommand(path);
-            }
-        }
-    }
 }
+
